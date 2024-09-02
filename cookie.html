@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Cookie com Contador</title>
+    <script>
+        // Função para definir um cookie
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        // Função para obter o valor de um cookie pelo nome
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        // Função chamada quando o botão é clicado
+        function handleButtonClick() {
+            const baseName = "username";
+            let count = getCookie("cookieCount");
+            if (!count) {
+                count = 0;
+            } else {
+                count = parseInt(count);
+            }
+            count++;
+            const cookieName = `${baseName}${count}`;
+            const cookieValue = "JohnDoe";
+            const daysToExpire = 7;
+            setCookie(cookieName, cookieValue, daysToExpire);
+            setCookie("cookieCount", count, daysToExpire); // Atualiza o contador de cookies
+            alert(`Cookie criado: ${cookieName} = ${cookieValue}`);
+        }
+    </script>
+</head>
+<body>
+    <button onclick="handleButtonClick()">Criar Cookie</button>
+</body>
+</html>

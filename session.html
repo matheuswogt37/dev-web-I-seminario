@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Sessões com Nomes Aleatórios</title>
+    <script>
+        // Função para gerar um nome aleatório
+        function generateRandomName() {
+            const names = ["Alice", "Bob", "Charlie", "Diana", "Eve", "Frank", "Grace", "Hannah", "Ivy", "Jack"];
+            const randomIndex = Math.floor(Math.random() * names.length);
+            return names[randomIndex];
+        }
+
+        // Função para atualizar a lista de sessões
+        function updateSessionList() {
+            // Obtém o array de sessões do sessionStorage
+            let sessionList = JSON.parse(sessionStorage.getItem("sessionList"));
+            if (!sessionList) {
+                sessionList = []; // Inicializa com um array vazio se não existir
+            }
+
+            // Gera um novo nome aleatório e adiciona ao array
+            const newName = generateRandomName();
+            sessionList.push(newName);
+
+            // Se o array tiver mais de 10 elementos, remove o mais antigo
+            if (sessionList.length > 10) {
+                sessionList.shift(); // Remove o primeiro elemento do array
+            }
+
+            // Salva o array atualizado no sessionStorage
+            sessionStorage.setItem("sessionList", JSON.stringify(sessionList));
+
+            // Atualiza a exibição da lista de sessões
+            displaySessionList();
+        }
+
+        // Função para exibir a lista de sessões
+        function displaySessionList() {
+            const sessionList = JSON.parse(sessionStorage.getItem("sessionList")) || [];
+            const listElement = document.getElementById("sessionListDisplay");
+            listElement.innerHTML = ""; // Limpa o conteúdo atual
+
+            // Cria uma lista de itens para exibir os nomes
+            sessionList.forEach((name, index) => {
+                const listItem = document.createElement("li");
+                listItem.textContent = `Sessão ${index + 1}: ${name}`;
+                listElement.appendChild(listItem);
+            });
+        }
+
+        // Inicializa a exibição da lista de sessões ao carregar a página
+        window.onload = displaySessionList;
+    </script>
+</head>
+<body>
+    <h1>Gerenciador de Sessões com Nomes Aleatórios</h1>
+    <button onclick="updateSessionList()">Adicionar Nome Aleatório</button>
+    <ul id="sessionListDisplay"></ul>
+</body>
+</html>
